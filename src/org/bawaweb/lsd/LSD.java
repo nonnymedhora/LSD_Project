@@ -1,10 +1,13 @@
 package org.bawaweb.lsd;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Random;
 import java.util.RandomAccess;
 import java.util.Set;
@@ -17,96 +20,95 @@ import java.util.Set;
 
 public class LSD {
 	
-		private int boundary;
+	private int boundary;
 
-		public int[][] generateLSD() {
-			
-			List<Integer> list = new ArrayList<Integer>();
-			for(int i = 0; i < this.boundary; i++) {
-				list.add(i+1);
-			}
-			/*System.out.println("Initial List:");
-			printList(list);*/
-			
-			Random rnd = new Random(this.boundary|System.currentTimeMillis());
-			final List<Integer> startList = shuffle(list, rnd );
+	public int[][] generateLSD() {
+		
+		List<Integer> list = new ArrayList<Integer>();
+		for(int i = 0; i < this.boundary; i++) {
+			list.add(i+1);
+		}
+		/*System.out.println("Initial List:");
+		printList(list);*/
+		
+		Random rnd = new Random(this.boundary|System.currentTimeMillis());
+		final List<Integer> startList = shuffle(list, rnd );
 
-			return process(startList,rnd);
-		}
-		
-		private int[][] process(final List<Integer> startList, Random rn) {
-			final int size = startList.size();
-			int[][] matrix = new int[size][size];
-			matrix[0] = toIntArray(startList);
-			for (int i = 1; i < size; i++) {
-				List<Integer> list2Add = shuffle(startList, rn);
-				if ( canAdd2Matrix(matrix, list2Add) ) {
-					matrix[i] = toIntArray(list2Add);
-				} else {
-					int count = 0;
-					list2Add = shuffle(startList, rn);
-					while(!canAdd2Matrix(matrix, list2Add) && count<10000000) {
-						list2Add = shuffle(startList, rn);
-						count += 1;
-					}/*System.out.println("count = "+ count);*/
-					matrix[i] = toIntArray(list2Add);
-				}
-			}
-			printMatrix(matrix);
-			
-			return matrix;
-		}
-		 
-		 private boolean canAdd2Matrix(int[][] aMatrix, List<Integer> aList) {
-			 final int size = aList.size();
-			 for(int i = 0; i < size; i++) {
-				 int listValue = aList.get(i);
-				 List<Integer> colList = toIntList( getColumn(aMatrix,i) );
-				 if( colList.contains(listValue)) {		// since we are adding rows to matrix
-					 return false;
-				 }
-			 }
-			 
-			 for(int i = 0; i < size; i++) {
-				 int listValue = aList.get(i);
-				 List<Integer> rowList = toIntList( getRow(aMatrix,i) );
-				 if ( rowList.get(i) == ( listValue ) ) {	//	traverse along the columns
-					 return false;
-				 }
-			 }
-			 
-			 return true;
-		}
-		 
-		private Set<Integer> getSetFromArray(int[] anArray) {
-			Set<Integer> theSet = new HashSet<Integer>();
-			final int length = anArray.length;
-			for(int i = 0; i < length; i++) {
-				if( anArray[i] != 0 && !theSet.contains(anArray[i]) )
-					theSet.add(anArray[i]);
-			}
-			return theSet;
-		}
-
-		private int[] getColumn(int[][] someMatrix, final int aCol) {
-			final int length = someMatrix[0].length;
-			int[] theColumn = new int[length];
-			for(int row = 0; row < length; row++) {
-				theColumn[row] = someMatrix[row][aCol];
-			}
-			return theColumn;
-		}
-		
-		private int[] getRow(int[][] someMatrix, final int aRow) {
-			final int length = someMatrix[0].length;
-			int[] theRow = new int[length];
-			for(int col = 0; col < length; col++) {
-				theRow[col] = someMatrix[aRow][col];
-			}
-			return theRow;
-		}
-		
+		return process(startList,rnd);
+	}
 	
+	private int[][] process(final List<Integer> startList, Random rn) {
+		final int size = startList.size();
+		int[][] matrix = new int[size][size];
+		matrix[0] = toIntArray(startList);
+		for (int i = 1; i < size; i++) {
+			List<Integer> list2Add = shuffle(startList, rn);
+			if ( canAdd2Matrix(matrix, list2Add) ) {
+				matrix[i] = toIntArray(list2Add);
+			} else {
+				int count = 0;
+				list2Add = shuffle(startList, rn);
+				while(!canAdd2Matrix(matrix, list2Add) && count<10000000) {
+					list2Add = shuffle(startList, rn);
+					count += 1;
+				}/*System.out.println("count = "+ count);*/
+				matrix[i] = toIntArray(list2Add);
+			}
+		}
+		printMatrix(matrix);
+		
+		return matrix;
+	}
+	 
+	 private boolean canAdd2Matrix(int[][] aMatrix, List<Integer> aList) {
+		 final int size = aList.size();
+		 for(int i = 0; i < size; i++) {
+			 int listValue = aList.get(i);
+			 List<Integer> colList = toIntList( getColumn(aMatrix,i) );
+			 if( colList.contains(listValue)) {		// since we are adding rows to matrix
+				 return false;
+			 }
+		 }
+		 
+		 for(int i = 0; i < size; i++) {
+			 int listValue = aList.get(i);
+			 List<Integer> rowList = toIntList( getRow(aMatrix,i) );
+			 if ( rowList.get(i) == ( listValue ) ) {	//	traverse along the columns
+				 return false;
+			 }
+		 }
+		 
+		 return true;
+	}
+	 
+	private Set<Integer> getSetFromArray(int[] anArray) {
+		Set<Integer> theSet = new HashSet<Integer>();
+		final int length = anArray.length;
+		for(int i = 0; i < length; i++) {
+			if( anArray[i] != 0 && !theSet.contains(anArray[i]) )
+				theSet.add(anArray[i]);
+		}
+		return theSet;
+	}
+
+	private int[] getColumn(int[][] someMatrix, final int aCol) {
+		final int length = someMatrix[0].length;
+		int[] theColumn = new int[length];
+		for(int row = 0; row < length; row++) {
+			theColumn[row] = someMatrix[row][aCol];
+		}
+		return theColumn;
+	}
+	
+	private int[] getRow(int[][] someMatrix, final int aRow) {
+		final int length = someMatrix[0].length;
+		int[] theRow = new int[length];
+		for(int col = 0; col < length; col++) {
+			theRow[col] = someMatrix[aRow][col];
+		}
+		return theRow;
+	}
+		
 	
 	private void printList(List<Integer> list) {
 		Iterator<Integer> it = list.iterator();
@@ -118,7 +120,7 @@ public class LSD {
 		
 	}
 	
-	private void printArray(int[] anArray) {
+	private void printArray(final int[] anArray) {
 		StringBuilder x = new StringBuilder();
 		for(int i = 0; i < anArray.length; i++) {
 			x.append(" "+anArray[i]);
@@ -126,14 +128,45 @@ public class LSD {
 		System.out.println(x.toString());
 	}
 	
-	private void printMatrix(int[][] matrix) {
+	private void printMatrix(final int[][] matrix) {
 		System.out.println("\nLSD [" + matrix[0].length + "] is\n");
 		for (int row = 0; row < matrix[0].length; row++) {
 			printArray(matrix[row]);
 		}
-
+		printAlphaMatrix(matrix);
 	}
 
+
+	private void printAlphaMatrix(final int[][] matrix) {
+		Map<Integer,Character> aMap = new HashMap<Integer,Character>();
+		aMap.put(	1,	'A'	);
+		aMap.put(	2,	'B'	);
+		aMap.put(	3,	'C'	);
+		aMap.put(	4,	'D'	);
+		aMap.put(	5,	'E'	);
+		aMap.put(	6,	'F'	);
+		aMap.put(	7,	'G'	);
+		aMap.put(	8,	'H'	);
+		aMap.put(	9,	'I'	);
+		aMap.put(	10,	'J'	);
+		aMap.put(	11,	'K'	);
+		
+		aMap = Collections.unmodifiableMap(aMap);	
+		
+		System.out.println("\nLSD_ALPHA [" + matrix[0].length + "] is\n");
+		for (int row = 0; row < matrix[0].length; row++) {
+			printAlphaArray(matrix[row], aMap);
+		}		
+	}
+
+	private void printAlphaArray(final int[] anArray, final Map<Integer, Character> alphaMap) {
+		
+		StringBuilder x = new StringBuilder();
+		for(int i = 0; i < anArray.length; i++) {
+			x.append(" "+alphaMap.get(anArray[i]));
+		}
+		System.out.println(x.toString());		
+	}
 
 	/**
 	  * adapted from @see java.util.ArrayList
@@ -211,7 +244,7 @@ public class LSD {
 	  * adapted-from--- @see java.util.Collections
 	  */ 
 	@SuppressWarnings({"rawtypes", "unchecked"})
-	public  void swap(List<?> list, int i, int j) {
+	private  void swap(List<?> list, int i, int j) {
 	    // instead of using a raw type here, it's possible to capture
 	    // the wildcard but it will require a call to a supplementary
 	    // private method

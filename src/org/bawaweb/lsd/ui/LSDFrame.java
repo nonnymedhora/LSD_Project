@@ -25,7 +25,7 @@ public class LSDFrame extends JFrame {
 	private LSDPanel 			lsdPanel;
 
 	private JComboBox<Integer> 	dimensionBox;
-	private final Integer[] 	dimensionChoiceArr	=	new Integer[] {	3,4,5,6,7,8,9,10 };
+	private final Integer[] 	dimensionChoiceArr	=	new Integer[] {	2,3,4,5,6,7,8,9,10,11 };
 	
 	private int 				selectedDimension;// = 5;
 
@@ -99,7 +99,7 @@ public class LSDFrame extends JFrame {
 	private static void generateLSDFrame(int dim) {
 		final LSDFrame frame = new LSDFrame(dim);
 		frame.setTitle("Latin Squares");
-		frame.setSize(400, 400);
+		frame.setSize(420, 420);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
 		frame.setVisible(true);
