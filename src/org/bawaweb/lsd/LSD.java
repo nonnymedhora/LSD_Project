@@ -1,6 +1,7 @@
 package org.bawaweb.lsd;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -48,19 +49,95 @@ public class LSD {
 			} else {
 				int count = 0;
 				list2Add = shuffle(startList, rn);
-				while(!canAdd2Matrix(matrix, list2Add) && count<10000000) {
+				while(!canAdd2Matrix(matrix, list2Add) && count<1000000000) {
 					list2Add = shuffle(startList, rn);
 					count += 1;
 				}/*System.out.println("count = "+ count);*/
 				matrix[i] = toIntArray(list2Add);
 			}
 		}
-		printMatrix(matrix);
-		
-		return matrix;
+		if ( checkMatrix(matrix) ) {
+			printMatrix(matrix);
+			return matrix;
+		}
+		return null;
 	}
-	 
-	 private boolean canAdd2Matrix(int[][] aMatrix, List<Integer> aList) {
+	
+	//	uses sum of row = (n*(n+1))/2 formula.... n = boundary
+	private boolean checkMatrix(int[][] matrix) {
+		boolean checked = true;
+		
+		int rowSum, colSum = 0;
+		
+		final int length = matrix.length;
+		assert( this.boundary == length);
+		
+		final int target = ((length)*(length+1))/2;
+		
+		for(int row = 0; row < length; row++) {
+			checked = checked && ( target == getRowSum(matrix,row) );
+			if( !checked ) return false;
+		}
+		
+		for(int col = 0; col < length; col++) {
+			checked = checked && ( target == getColSum(matrix,col) );
+			if( !checked ) return false;
+		}
+		
+		
+		return checked;
+		
+	}
+
+	private int getColSum(int[][] matrix, int col) {
+		int sum = 0;
+		for (int r = 0; r < this.boundary; r++) {
+			sum += matrix[r][col];
+		}
+		return sum;
+	}
+
+	private int getRowSum(int[][] matrix, int row) {
+		int sum = 0;
+		for (int c = 0; c < this.boundary; c++) {
+			sum += matrix[row][c];
+		}
+		return sum;
+	}
+
+	private boolean checkMatrix_O(int[][] matrix) {
+		int length = matrix.length;
+		Set<Integer> checkSet = new HashSet<Integer>();		
+		for(int i = 1; i <= length; i++) {
+			checkSet.add(i);
+		}
+		
+		int[] row = matrix[0];
+		List<Integer> rowList = new ArrayList<Integer>();
+		for(int i = 0; i < row.length; i++) {
+			rowList.add( row[i] );
+		}
+
+		
+		List<Integer> colList = new ArrayList<Integer>();
+		for(int i = 0; i < length; i++) {
+			colList.add(matrix[i][0]);
+		}
+		
+		
+		for(int i = 0; i < row.length; i++) {
+			int aVal = row[i];
+			
+			if( checkSet.contains(aVal) && colList.contains(aVal) ) {
+				checkSet.remove(aVal);
+			} else {
+				return false;
+			}
+		}		
+		return true;
+	}
+
+	private boolean canAdd2Matrix(int[][] aMatrix, List<Integer> aList) {
 		 final int size = aList.size();
 		 for(int i = 0; i < size; i++) {
 			 int listValue = aList.get(i);
@@ -107,6 +184,16 @@ public class LSD {
 			theRow[col] = someMatrix[aRow][col];
 		}
 		return theRow;
+	}
+	
+	private void printSet(Set<Integer> aSet) {
+		Iterator<Integer> iter = aSet.iterator();
+		StringBuilder sb = new StringBuilder();
+		while (iter.hasNext()) {
+			sb.append(" " + iter.next() + " ");
+		}
+		System.out.println("\n\nSet is\n"+sb.toString()+"\n_______\n");
+		
 	}
 		
 	

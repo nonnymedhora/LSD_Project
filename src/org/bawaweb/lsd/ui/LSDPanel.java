@@ -61,11 +61,12 @@ public class LSDPanel extends JPanel {
 		this.colorPaletteMap.put(	3,	Color.GREEN		);
 		this.colorPaletteMap.put(	4,	Color.RED		);
 		this.colorPaletteMap.put(	5,	Color.YELLOW	);
-		this.colorPaletteMap.put(	6,	Color.ORANGE	);
+		this.colorPaletteMap.put(	6,	new Color(195,33,72)	);	//maroon
 		this.colorPaletteMap.put(	7,	Color.MAGENTA	);
 		this.colorPaletteMap.put(	8,	Color.GRAY		);
 		this.colorPaletteMap.put(	9,	Color.PINK		);
 		this.colorPaletteMap.put(	10,	Color.CYAN		);
+		this.colorPaletteMap.put(	11,	Color.ORANGE.darker().darker()/*new Color(128,0,128)*/);
 		
 		this.colorPaletteMap	=	Collections.unmodifiableMap( this.colorPaletteMap );
 		
