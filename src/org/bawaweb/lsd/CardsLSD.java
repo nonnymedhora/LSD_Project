@@ -78,6 +78,7 @@ import java.util.Map;
  */
 public class CardsLSD {
 	
+	private static final int size = 4;
 	private final static Map<Integer,Character> numMap = new HashMap<Integer,Character>();
 	static {
 		numMap.put( 1, 'J');	//jack
@@ -141,16 +142,16 @@ public class CardsLSD {
 		}
 	}
 
-	public static void main(String[] args) {
-		final int size = 4;
+	
+	public static void main(String[] args) {		
 		LSD lsd = new LSD(size);
 		
-		int[][] numMatrix = lsd.generateLSD();
-		int[][] suitMatrix = lsd.generateLSD();
-		boolean ok = false;
+		int[][] numMatrix 	= lsd.generateLSD();
+		int[][] suitMatrix 	= lsd.generateLSD();
+		boolean ok 			= false;
 		
-		String[][] theMatrix = new String[size][size];
-		List<String> contentsList = new ArrayList<String>();
+		String[][] theMatrix 		= new String[size][size];
+		List<String> contentsList 	= new ArrayList<String>();
 		
 		while ( !ok ) {
 			if ( !checkMatrixEquality(numMatrix, suitMatrix) ) {
@@ -158,17 +159,17 @@ public class CardsLSD {
 				
 				for( int i = 0; i < size; i++) {
 					if( !ok ) {
-						numMatrix = lsd.generateLSD();
-						suitMatrix = lsd.generateLSD();
-						contentsList = new ArrayList<String>();
+						numMatrix 		= lsd.generateLSD();
+						suitMatrix 		= lsd.generateLSD();
+						contentsList 	= new ArrayList<String>();
 						break;
 					}
 					for( int j = 0; j < size; j++ ) {
 						int m1 = numMatrix[i][j];		//	for num
 						int m2 = suitMatrix[i][j];		// for suit
 						
-						char num = numMap.get(m1);
-						char suit = suitMap.get(m2);
+						char num 	= numMap.get(m1);
+						char suit 	= suitMap.get(m2);
 						String content = String.valueOf(num) + String.valueOf(suit); 
 						
 						if( !contentsList.contains( content ) ) {
