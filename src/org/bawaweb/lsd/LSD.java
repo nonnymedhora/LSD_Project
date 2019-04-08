@@ -21,24 +21,33 @@ import java.util.Set;
 
 public class LSD {
 	
-	private int boundary;
+	protected int boundary;
+	
+	protected int[][] matrix;
 
 	public int[][] generateLSD() {
 		
-		List<Integer> list = new ArrayList<Integer>();
-		for(int i = 0; i < this.boundary; i++) {
-			list.add(i+1);
-		}
+		List<Integer> list = getBaseStartList();
 		/*System.out.println("Initial List:");
 		printList(list);*/
 		
 		Random rnd = new Random(this.boundary|System.currentTimeMillis());
 		final List<Integer> startList = shuffle(list, rnd );
+		
+		this.matrix = process(startList,rnd);
 
-		return process(startList,rnd);
+		return this.matrix;
+	}
+
+	protected List<Integer> getBaseStartList() {
+		List<Integer> list = new ArrayList<Integer>();
+		for(int i = 0; i < this.boundary; i++) {
+			list.add(i+1);
+		}
+		return list;
 	}
 	
-	private int[][] process(final List<Integer> startList, Random rn) {
+	protected int[][] process(final List<Integer> startList, Random rn) {
 		final int size = startList.size();
 		int[][] matrix = new int[size][size];
 		matrix[0] = toIntArray(startList);
@@ -64,7 +73,7 @@ public class LSD {
 	}
 	
 	//	uses sum of row = (n*(n+1))/2 formula.... n = boundary
-	private boolean checkMatrix(int[][] matrix) {
+	protected boolean checkMatrix(int[][] matrix) {
 		boolean checked = true;
 		
 		int rowSum, colSum = 0;
@@ -89,7 +98,7 @@ public class LSD {
 		
 	}
 
-	private int getColSum(int[][] matrix, int col) {
+	protected int getColSum(int[][] matrix, int col) {
 		int sum = 0;
 		for (int r = 0; r < this.boundary; r++) {
 			sum += matrix[r][col];
@@ -97,7 +106,7 @@ public class LSD {
 		return sum;
 	}
 
-	private int getRowSum(int[][] matrix, int row) {
+	protected int getRowSum(int[][] matrix, int row) {
 		int sum = 0;
 		for (int c = 0; c < this.boundary; c++) {
 			sum += matrix[row][c];
@@ -137,7 +146,7 @@ public class LSD {
 		return true;
 	}
 
-	private boolean canAdd2Matrix(int[][] aMatrix, List<Integer> aList) {
+	protected boolean canAdd2Matrix(int[][] aMatrix, List<Integer> aList) {
 		 final int size = aList.size();
 		 for(int i = 0; i < size; i++) {
 			 int listValue = aList.get(i);
@@ -168,7 +177,7 @@ public class LSD {
 		return theSet;
 	}
 
-	private int[] getColumn(int[][] someMatrix, final int aCol) {
+	protected int[] getColumn(int[][] someMatrix, final int aCol) {
 		final int length = someMatrix[0].length;
 		int[] theColumn = new int[length];
 		for(int row = 0; row < length; row++) {
@@ -177,7 +186,7 @@ public class LSD {
 		return theColumn;
 	}
 	
-	private int[] getRow(int[][] someMatrix, final int aRow) {
+	protected int[] getRow(int[][] someMatrix, final int aRow) {
 		final int length = someMatrix[0].length;
 		int[] theRow = new int[length];
 		for(int col = 0; col < length; col++) {
@@ -197,7 +206,7 @@ public class LSD {
 	}
 		
 	
-	private void printList(List<Integer> list) {
+	protected void printList(List<Integer> list) {
 		Iterator<Integer> it = list.iterator();
 		StringBuilder x = new StringBuilder();
 		while (it.hasNext()) {
@@ -207,7 +216,7 @@ public class LSD {
 		
 	}
 	
-	private void printArray(final int[] anArray) {
+	protected void printArray(final int[] anArray) {
 		StringBuilder x = new StringBuilder();
 		for(int i = 0; i < anArray.length; i++) {
 			x.append(" "+anArray[i]);
@@ -215,7 +224,7 @@ public class LSD {
 		System.out.println(x.toString());
 	}
 	
-	private void printMatrix(final int[][] matrix) {
+	protected void printMatrix(final int[][] matrix) {
 		System.out.println("\nLSD [" + matrix[0].length + "] is\n");
 		for (int row = 0; row < matrix[0].length; row++) {
 			printArray(matrix[row]);
@@ -224,7 +233,7 @@ public class LSD {
 	}
 
 
-	private void printAlphaMatrix(final int[][] matrix) {
+	protected void printAlphaMatrix(final int[][] matrix) {
 		Map<Integer,Character> aMap = new HashMap<Integer,Character>();
 		aMap.put(	1,	'A'	);
 		aMap.put(	2,	'B'	);
@@ -246,11 +255,15 @@ public class LSD {
 		}		
 	}
 
-	private void printAlphaArray(final int[] anArray, final Map<Integer, Character> alphaMap) {
+	protected void printAlphaArray(final int[] anArray, final Map<Integer, Character> alphaMap) {
 		
 		StringBuilder x = new StringBuilder();
 		for(int i = 0; i < anArray.length; i++) {
-			x.append(" "+alphaMap.get(anArray[i]));
+			if (alphaMap.get(anArray[i])!=null) {
+				x.append(" " + alphaMap.get(anArray[i]));
+			} else {
+				x.append(" "+'Z');
+			}
 		}
 		System.out.println(x.toString());		
 	}
@@ -269,7 +282,7 @@ public class LSD {
 	            a[size] = null;
 	        return a;
 	    }*/
-	private int[] toIntArray(List<Integer> aList) {
+	protected int[] toIntArray(List<Integer> aList) {
 		int[] theArray = new int[aList.size()];
 		Iterator<Integer> it = aList.iterator();
 		int i = 0;
@@ -280,7 +293,7 @@ public class LSD {
 		return theArray;
 	}
 
-	private List<Integer> toIntList(int[] anArray) {
+	protected List<Integer> toIntList(int[] anArray) {
 		List<Integer> theList = new ArrayList<Integer>();
 		for(int i = 0; i < anArray.length; i++) {
 			theList.add(anArray[i]);
@@ -292,7 +305,7 @@ public class LSD {
 	  * adapted-from---java.util.Collections
 	 * Swaps the two specified elements in the specified array.
 	 */
-	private  void swap(Object[] arr, int i, int j) {
+	protected  void swap(Object[] arr, int i, int j) {
 	    Object tmp = arr[i];
 	    arr[i] = arr[j];
 	    arr[j] = tmp;
@@ -331,7 +344,7 @@ public class LSD {
 	  * adapted-from--- @see java.util.Collections
 	  */ 
 	@SuppressWarnings({"rawtypes", "unchecked"})
-	private  void swap(List<?> list, int i, int j) {
+	protected  void swap(List<?> list, int i, int j) {
 	    // instead of using a raw type here, it's possible to capture
 	    // the wildcard but it will require a call to a supplementary
 	    // private method
@@ -344,6 +357,10 @@ public class LSD {
 		super();
 		this.boundary = b;
 //		generateLSD(this.boundary);//
+	}
+
+	public LSD() {
+		super();
 	}
 
 	public static void main(String[] args) {
